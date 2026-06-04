@@ -14,4 +14,5 @@ jobs:
       id-token: write
     uses: slsa-framework/source-actions/.github/workflows/compute_slsa_source.yml@main
     with:
+      build-from-source: true
       allow-merge-commits: true

@@ -1,0 +1,33 @@
+# miniprow configuration
+# https://github.com/carabiner-dev/miniprow
+#
+# Release tagging: a contributor requests a release by adding a
+# `Release-As: major|minor|patch` trailer to a commit. miniprow posts a
+# `miniprow/tag` check that gates the request on the policies below, and
+# cuts a sigstore-signed tag on merge only if they pass.
+
+---
+lgtm:
+  self_allow: [puerco]
+  auto_apply: true
+
+approve:
+  allow_author: true
+  auto_apply: true
+
+override:
+  allow: [puerco]  # users who may /override 
+
+tagger:
+  enabled: true
+  policies:
+    # `all` is evaluated for every bump. The gitsign-commit-signature policy
+    # verifies the head commit's gitsign signature; the gitsign evidence
+    # collector is injected automatically by miniprow (scoped to the PR's
+    # refs/pull/N/head), so no `evidence:` entry is needed here.
+    all:
+      - id: gitsign-commit-signature
+        location:
+          uri: git+https://github.com/carabiner-dev/policies#gitsign/gitsign-commit-signature.hjson
+        identities:
+          - "sigstore::https://accounts.google.com::puerco@carabiner.dev"
